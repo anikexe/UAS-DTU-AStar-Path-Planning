@@ -67,12 +67,12 @@ simulation_log.txt
 
 ## Files
 
-astar2.py            - Main Python program
-simulation_log.txt   - Results from all test cases
-outputs/             - Generated visualization images
+* astar2.py            - Main Python program
+* simulation_log.txt   - Results from all test cases
+* outputs/             - Generated visualization images
 
 
 ## Author 
-Aniket Khila
-26/A1/068, Delhi Technological University
-UAS-DTU Avionics
+* Aniket Khila
+* 26/A1/068, Delhi Technological University
+* UAS-DTU Avionics
