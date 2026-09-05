@@ -2,10 +2,11 @@ import time
 import os #for step 8 to make folder
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
+import matplotlib.patches as mpatches
 
 
 # ---------------------------------------------------------------------------
-# STEP 1: Turn the text grid into something Python can work with
+# STEP 1: Turns the text grid into something Python can work with
 # ---------------------------------------------------------------------------
 
 def pad_rows(grid_lines):
@@ -47,6 +48,12 @@ def read_grid(grid_lines):
             col_number = col_number + 1
         grid.append(row)
         row_number = row_number + 1
+
+    if start is None:
+            raise ValueError("The grid doesn't contain a start position 'S' ")
+
+    if goal is None:
+            raise ValueError("The grid doesn't contain a goal position 'G' ")
 
     return grid, start, goal
 
@@ -107,7 +114,7 @@ def get_neighbors(grid, position):
 # ---------------------------------------------------------------------------
 # STEP 4: Find the entry with the smallest f-score in our "open list"
 #          (this is doing the job heapq would normally do for us, but
-#          written out in plain loop form so it's easy to follow)
+#          written out in plain loop form so it's easy to follow:)
 # ---------------------------------------------------------------------------
 
 def find_best_node(open_list):
@@ -126,7 +133,7 @@ def find_best_node(open_list):
 
     return best_index
 #this will return the index with the lowest f score for A*
-#due to shortage of time (got viral) used this instead of heapq(yeh alag baat hai confusing tha woh)
+#due to shortage of time (viral) used this instead of heapq(yeh alag baat hai confusing tha woh)
 
 # ---------------------------------------------------------------------------
 # STEP 5: The A* algorithm itself
@@ -157,7 +164,7 @@ def a_star(grid, start, goal):
         explored.append(current)
 
         if current == goal:
-            # Walk backwards from goal to start using came_from
+            # Walk backwards from goal to start using came_from, reversed path
             path = [current]
             while path[-1] != start:
                 previous_cell = came_from[path[-1]]
@@ -179,7 +186,7 @@ def a_star(grid, start, goal):
                 f_score = new_cost + heuristic(neighbor, goal)
                 open_list.append([f_score, neighbor])
 
-    # If we get here, open_list ran out and we never reached the goal
+    # If we get here, open_list ran out and we never reached the goal :(
     time_taken = time.perf_counter() - start_time
     return [], -1, explored, time_taken
 
@@ -267,7 +274,31 @@ def visualize(grid, start, goal, path, explored, title, filename):
              color="black", fontweight="bold")
     plt.text(goal[1], goal[0], "G", ha="center", va="center",
              color="black", fontweight="bold")
-    plt.savefig(filename)
+
+    #To create coloured boxes for legend in output images 
+
+    legend_labels = [
+
+    mpatches.Patch( facecolor="white", edgecolor="black", label="Free Cell"),
+    mpatches.Patch( facecolor="black", edgecolor="black", label="Obstacle"),
+    mpatches.Patch( facecolor="lightskyblue", edgecolor="black", label="Explored Cell" ),
+    mpatches.Patch( facecolor="gold", edgecolor="black", label="Final Path")
+
+    ]
+
+    ax.legend(
+    handles=legend_labels,
+    loc="upper center", #to add legend in the bottom cnetre of the image 
+    bbox_to_anchor=(0.5, -0.12),
+    ncol=4, #4 columns 
+    fontsize=8,
+    frameon=True )
+
+    plt.tight_layout()#so that legends dont get cutoff from the final image 
+
+    plt.savefig(filename,
+    dpi=150,
+    bbox_inches="tight")
     plt.close()
 
 
@@ -288,7 +319,7 @@ def print_results(name, path, cost, explored, time_taken, image_file):
         print("No valid path exists between Start and Goal.")
 
     print("Nodes Explored:", len(explored))
-    print("Execution Time:", time_taken, "seconds")
+    print(f"Execution Time: {time_taken:.7f} seconds") # used instead of the simple time_taken to get rid of the scientific notation 
     print("Visualization saved:", image_file)
     print()
 
