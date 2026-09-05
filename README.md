@@ -58,7 +58,7 @@ Manhattan distance is suitable because diagonal movement is not allowed.
 Open a terminal inside the project folder and run:
 
 ```bash
-python astar2.py
+py astar2.py
 ```
 
 The terminal results are also available in:
